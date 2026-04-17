@@ -5,7 +5,7 @@ import styles from './NavBar.module.css';
 const NAV_ITEMS: string[] = ['공연소개', '참가신청', '기획팀'];
 
 interface NavBarProps {
-  currentSection: 'hero' | 'form';
+  currentSection: 'hero' | 'intro' | 'info' | 'form';
   onNavClick?: (item: string) => void;
 }
 

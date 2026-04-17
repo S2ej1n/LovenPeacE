@@ -1,0 +1,123 @@
+.container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 720px;
+  border-radius: 20px;
+  padding: 32px 40px;
+  backdrop-filter: blur(5px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── 3열 정보 그리드 ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.infoCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.5px solid rgba(193, 200, 223, 0.12);
+  border-radius: 12px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.06em;
+}
+
+.cardList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardList li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: rgba(193, 200, 223, 0.65);
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+}
+
+.itemLabel {
+  font-size: 10px;
+  color: rgba(193, 200, 223, 0.4);
+  letter-spacing: 0.06em;
+}
+
+.noBullet {
+  margin-top: 4px;
+}
+
+.highlight {
+  font-size: 12px;
+  color: rgba(193, 200, 223, 0.85);
+  letter-spacing: 0.04em;
+}
+
+/* ── 참고사항 ── */
+.noteWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.5px solid rgba(193, 200, 223, 0.12);
+  border-radius: 12px;
+}
+
+.noteList {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.noteList li {
+  font-size: 12px;
+  color: rgba(193, 200, 223, 0.55);
+  line-height: 1.75;
+  letter-spacing: 0.03em;
+  list-style: disc;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 600px) {
+  .card {
+    padding: 24px 16px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .cardList br {
+    display: none;
+  }
+}

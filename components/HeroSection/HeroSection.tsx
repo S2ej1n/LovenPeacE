@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import styles from './HeroSection.module.css';
 import NavBar from '../NavBar/NavBar';
+import InfoIntro from '../InfoIntro/InfoIntro';
+import InfoSection from '../InfoSection/InfoSection';
 import FormSection from '../FormSection/FormSection';
 
 interface HeartConfig {
@@ -23,9 +25,20 @@ const HEARTS: HeartConfig[] = [
   { id: 7, styleClass: styles.h7, width: 130,  height: 55  },
 ];
 
+export type Section = 'hero' | 'intro' | 'info' | 'form';
+const SECTIONS: Section[] = ['hero', 'intro', 'info', 'form'];
+
+function getLayerClass(layer: Section, current: Section, s: Record<string, string>) {
+  const li = SECTIONS.indexOf(layer);
+  const ci = SECTIONS.indexOf(current);
+  if (li === ci) return s.layerVisible;
+  if (li < ci)  return s.layerHiddenUp;
+  return s.layerHiddenDown;
+}
+
 export default function HeroSection() {
-  const [currentSection, setCurrentSection] = useState<'hero' | 'form'>('hero');
-  const currentSectionRef = useRef(currentSection);
+  const [currentSection, setCurrentSection] = useState<Section>('hero');
+  const currentSectionRef = useRef<Section>(currentSection);
 
   useEffect(() => {
     currentSectionRef.current = currentSection;
@@ -35,34 +48,25 @@ export default function HeroSection() {
     let cooldown = false;
     let touchStartY = 0;
 
-    const handleWheel = (e: WheelEvent) => {
+    const go = (dir: 1 | -1) => {
       if (cooldown) return;
       cooldown = true;
       setTimeout(() => { cooldown = false; }, 900);
 
-      if (e.deltaY > 0 && currentSectionRef.current === 'hero') {
-        setCurrentSection('form');
-      } else if (e.deltaY < 0 && currentSectionRef.current === 'form') {
-        setCurrentSection('hero');
-      }
+      const idx = SECTIONS.indexOf(currentSectionRef.current);
+      const next = SECTIONS[idx + dir];
+      if (next) setCurrentSection(next);
     };
+
+    const handleWheel = (e: WheelEvent) => go(e.deltaY > 0 ? 1 : -1);
 
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
     };
-
     const handleTouchEnd = (e: TouchEvent) => {
-      if (cooldown) return;
       const diff = touchStartY - e.changedTouches[0].clientY;
       if (Math.abs(diff) < 50) return;
-      cooldown = true;
-      setTimeout(() => { cooldown = false; }, 900);
-
-      if (diff > 0 && currentSectionRef.current === 'hero') {
-        setCurrentSection('form');
-      } else if (diff < 0 && currentSectionRef.current === 'form') {
-        setCurrentSection('hero');
-      }
+      go(diff > 0 ? 1 : -1);
     };
 
     window.addEventListener('wheel', handleWheel, { passive: true });
@@ -77,13 +81,16 @@ export default function HeroSection() {
   }, []);
 
   const handleNavClick = (item: string) => {
+    if (item === '공연소개') setCurrentSection('hero');
     if (item === '참가신청') setCurrentSection('form');
-    else if (item === '공연소개') setCurrentSection('hero');
   };
+
+  const layerClass = (layer: Section) =>
+    `${styles.layer} ${getLayerClass(layer, currentSection, styles)}`;
 
   return (
     <main className={styles.scene}>
-      {/* 배경 orbit - 맨 뒤 레이어 */}
+      {/* 배경 orbit */}
       <Image
         className={styles.orbitImg}
         src="/orbit.png"
@@ -93,11 +100,11 @@ export default function HeroSection() {
         priority
       />
 
-      {/* Navigation - 항상 표시 */}
+      {/* Navigation */}
       <NavBar currentSection={currentSection} onNavClick={handleNavClick} />
 
       {/* Hero Layer */}
-      <div className={`${styles.layer} ${currentSection === 'hero' ? styles.layerVisible : styles.layerHiddenUp}`}>
+      <div className={layerClass('hero')}>
         <section className={styles.titleWrap}>
           <div className={styles.logoWrap}>
             <Image
@@ -121,8 +128,18 @@ export default function HeroSection() {
         </section>
       </div>
 
+      {/* Intro Layer */}
+      <div className={layerClass('intro')}>
+        <InfoIntro isActive={currentSection === 'intro'} />
+      </div>
+
+      {/* Info Layer */}
+      <div className={layerClass('info')}>
+        <InfoSection isActive={currentSection === 'info'} />
+      </div>
+
       {/* Form Layer */}
-      <div className={`${styles.layer} ${currentSection === 'form' ? styles.layerVisible : styles.layerHiddenDown}`}>
+      <div className={layerClass('form')}>
         <FormSection />
       </div>
     </main>

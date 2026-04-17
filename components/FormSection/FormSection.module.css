@@ -200,3 +200,9 @@
   50%       { transform: scale(1.15); opacity: 0.8; }
 }
 
+@media (max-width: 450px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
