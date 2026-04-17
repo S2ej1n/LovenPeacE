@@ -18,6 +18,34 @@
   pointer-events: none;
 }
 
+/* ── Layers ── */
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.layerVisible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* 히어로가 사라질 때: 위로 올라가며 사라짐 */
+.layerHiddenUp {
+  opacity: 0;
+  transform: translateY(-48px);
+  pointer-events: none;
+}
+
+/* 폼이 대기 중일 때: 아래에서 대기 */
+.layerHiddenDown {
+  opacity: 0;
+  transform: translateY(48px);
+  pointer-events: none;
+}
+
 /* ── Title ── */
 .titleWrap {
   position: absolute;
@@ -30,7 +58,7 @@
 }
 
 .logoWrap {
-  position: relative;  /* ← 하트들의 기준점 */
+  position: relative;
 }
 
 .titleFloat {
@@ -45,26 +73,13 @@
 }
 
 /* ── Heart positions ── */
-/* 더블하트 */
 .h1 { right: -15%; top: 40%; animation-delay: 0s; --dy: -9px; --r: -5deg; width: clamp(70px, 10vw, 140px); }
-/* 왼쪽 아래 */
 .h2 { left: -13%;  top: 58%; animation-delay: 0.7s;  --dy: -10px; --r:  5deg; width: clamp(65px, 9vw, 130px); }
-
-/* 쪼글하트 */
 .h3 { left: -5%;  top: 0%; animation-delay: 1.2s;  --dy:  -8px; --r: -3deg; width: clamp(45px, 6vw, 90px);}
-
-/* 맨오른쪽 위 하트 */
 .h4 { right: -20%;  top: -10%; animation-delay: 0.5s;  --dy:  -6px; --r:  3deg; width: clamp(65px, 9vw, 130px); }
-
-/* 오른쪽보는 하트 */
 .h5 { right: -22%; top: 70%; animation-delay: 0.3s;  --dy: -13px; --r:  4deg; width: clamp(60px, 8vw, 120px); }
-
-/* 내부 이중하트 */
 .h6 { left: -30%;  top: 18%; animation-delay: 1.5s;  --dy:  -14px; --r: -0deg; width: clamp(75px, 10vw, 150px);}
-
-/* 이중하트 */
 .h7 { left: -30%; top: 80%; animation-delay: 0.9s;  --dy:  -7px; --r:  2deg; width: clamp(65px, 9vw, 130px);}
-
 
 /* ── Float animation ── */
 @keyframes float {
