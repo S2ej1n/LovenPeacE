@@ -47,9 +47,8 @@ export default function FormSection() {
       <div className={styles.container}>
         <div className={styles.card}>
           <div className={styles.successWrap}>
-            <span className={styles.successIcon}>♥</span>
-            <h2 className={styles.title}>신청이 완료되었어요</h2>
-            <p className={styles.subtitle}>Love and Peace와 함께해줘서 고마워요</p>
+            <h2 className={styles.title}>신청이 완료되었습니다</h2>
+            <p className={styles.subtitle}>선정 공연팀에게는 추후 개별 안내가 갈 예정입니다.</p>
           </div>
         </div>
       </div>
