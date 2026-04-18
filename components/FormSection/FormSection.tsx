@@ -152,7 +152,7 @@ export default function FormSection() {
               type="submit"
               disabled={isSubmitting}
             >
-              {isSubmitting ? '신청 중...' : '신청하기 ♥'}
+              {isSubmitting ? '신청 중...' : '아직 신청기간이 아닙니다.'}
             </button>
           </form>
         </div>

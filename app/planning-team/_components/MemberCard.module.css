@@ -1,0 +1,114 @@
+.card {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 28px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.5px solid rgba(193, 200, 223, 0.12);
+  border-radius: 16px;
+  backdrop-filter: blur(5px);
+  align-items: center;
+}
+
+/* ── 사진 ── */
+.photoWrap {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 0.5px solid rgba(193, 200, 223, 0.2);
+  flex-shrink: 0;
+  justify-self: center;
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(160, 168, 208, 0.08);
+  font-size: 28px;
+  font-weight: 300;
+  color: rgba(193, 200, 223, 0.5);
+  letter-spacing: 0;
+}
+
+/* ── 정보 ── */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.06em;
+}
+
+.position {
+  margin: 0;
+  font-size: 11.5px;
+  color: rgba(193, 200, 223, 0.45);
+  letter-spacing: 0.08em;
+}
+
+.quote {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(193, 200, 223, 0.65);
+  line-height: 1.75;
+  letter-spacing: 0.03em;
+  padding-top: 10px;
+  border-top: 0.5px solid rgba(193, 200, 223, 0.1);
+}
+
+/* ── SNS ── */
+.snsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 14px;
+}
+
+.snsLink {
+  font-size: 11px;
+  color: rgba(160, 168, 208, 0.65);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+
+.snsLink:hover {
+  color: rgba(193, 200, 223, 1);
+}
+
+/* ── 반응형 ── */
+@media (max-width: 480px) {
+  .card {
+    grid-template-columns: 80px 1fr;
+    gap: 18px;
+    padding: 18px 16px;
+  }
+
+  .photoWrap {
+    width: 68px;
+    height: 68px;
+  }
+}

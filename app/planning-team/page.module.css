@@ -1,0 +1,44 @@
+.scene {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.scrollArea {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 80px 24px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heading {
+  margin: 15px 0 20px;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(193, 200, 223, 0.75);
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+.sub{
+  margin: 0 0 28px;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(193, 200, 223, 0.5);
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.list {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
