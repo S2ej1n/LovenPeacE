@@ -115,7 +115,7 @@ export default function HeroSection() {
   return (
     <main className={styles.scene}>
       {/* 배경 orbit */}
-      <Image
+      {/* <Image
         className={styles.orbitImg}
         src="/orbit.png"
         alt="orbit"
@@ -123,7 +123,7 @@ export default function HeroSection() {
         height={800}
         priority
       />
-
+       */}
       {/* Navigation */}
       <NavBar currentSection={currentSection} onNavClick={handleNavClick} />
 
