@@ -1,13 +1,14 @@
 .container {
   position: absolute;
   inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 80px 24px 24px;
 }
 
 .card {
+  margin: auto;
   width: 100%;
   max-width: 600px;
   background: rgba(15, 12, 35, 0.55);

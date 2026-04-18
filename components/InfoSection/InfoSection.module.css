@@ -1,18 +1,18 @@
 .container {
   position: absolute;
   inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 80px 24px 24px;
 }
 
 .card {
+  margin: auto;
   width: 100%;
   max-width: 720px;
   border-radius: 20px;
   padding: 32px 40px;
-  backdrop-filter: blur(5px);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -32,6 +32,7 @@
   padding: 18px 16px;
   background: rgba(255, 255, 255, 0.03);
   border: 0.5px solid rgba(193, 200, 223, 0.12);
+    backdrop-filter: blur(5px);
   border-radius: 12px;
 }
 
@@ -87,6 +88,7 @@
   background: rgba(255, 255, 255, 0.03);
   border: 0.5px solid rgba(193, 200, 223, 0.12);
   border-radius: 12px;
+  backdrop-filter: blur(5px);
 }
 
 .noteList {
@@ -114,9 +116,7 @@
   .grid {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 600px) {
   .cardList br {
     display: none;
   }

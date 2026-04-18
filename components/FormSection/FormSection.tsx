@@ -60,7 +60,7 @@ export default function FormSection() {
     <>
       <div className={styles.container}>
         <div className={styles.card}>
-          <h2 className={styles.title}>공연 참가 신청</h2>
+          <h2 className={styles.title}>공연팀 참가 신청</h2>
           <p className={styles.subtitle}>L♡vE and PeacE 공연팀은 선착순으로 모집됩니다.</p>
 
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>

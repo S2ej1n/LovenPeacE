@@ -13,7 +13,6 @@
   gap: 20px;
   text-align: center;
   max-width: 560px;
-  /* backdrop-filter는 blurActive 클래스가 붙을 때만 애니메이션으로 적용 */
 }
 
 .blurActive {

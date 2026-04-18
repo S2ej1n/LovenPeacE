@@ -39,6 +39,16 @@ function getLayerClass(layer: Section, current: Section, s: Record<string, strin
 export default function HeroSection() {
   const [currentSection, setCurrentSection] = useState<Section>('hero');
   const currentSectionRef = useRef<Section>(currentSection);
+  const infoLayerRef = useRef<HTMLDivElement>(null);
+  const formLayerRef = useRef<HTMLDivElement>(null);
+
+  const getActiveScrollable = (): HTMLElement | null => {
+    const section = currentSectionRef.current;
+    const layerEl =
+      section === 'info' ? infoLayerRef.current :
+      section === 'form' ? formLayerRef.current : null;
+    return layerEl ? (layerEl.firstElementChild as HTMLElement) : null;
+  };
 
   useEffect(() => {
     currentSectionRef.current = currentSection;
@@ -58,7 +68,15 @@ export default function HeroSection() {
       if (next) setCurrentSection(next);
     };
 
-    const handleWheel = (e: WheelEvent) => go(e.deltaY > 0 ? 1 : -1);
+    const handleWheel = (e: WheelEvent) => {
+      const scrollable = getActiveScrollable();
+      if (scrollable) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollable;
+        if (e.deltaY > 0 && scrollTop + clientHeight < scrollHeight - 2) return;
+        if (e.deltaY < 0 && scrollTop > 2) return;
+      }
+      go(e.deltaY > 0 ? 1 : -1);
+    };
 
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
@@ -66,6 +84,12 @@ export default function HeroSection() {
     const handleTouchEnd = (e: TouchEvent) => {
       const diff = touchStartY - e.changedTouches[0].clientY;
       if (Math.abs(diff) < 50) return;
+      const scrollable = getActiveScrollable();
+      if (scrollable) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollable;
+        if (diff > 0 && scrollTop + clientHeight < scrollHeight - 2) return;
+        if (diff < 0 && scrollTop > 2) return;
+      }
       go(diff > 0 ? 1 : -1);
     };
 
@@ -134,12 +158,12 @@ export default function HeroSection() {
       </div>
 
       {/* Info Layer */}
-      <div className={layerClass('info')}>
+      <div ref={infoLayerRef} className={layerClass('info')}>
         <InfoSection isActive={currentSection === 'info'} />
       </div>
 
       {/* Form Layer */}
-      <div className={layerClass('form')}>
+      <div ref={formLayerRef} className={layerClass('form')}>
         <FormSection />
       </div>
     </main>
