@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import styles from './HeroSection.module.css';
-import NavBar from '../NavBar/NavBar';
 import InfoIntro from '../InfoIntro/InfoIntro';
 import InfoSection from '../InfoSection/InfoSection';
 import FormSection from '../FormSection/FormSection';
+import { useNavContext } from '../NavBar/NavContext';
+import type { Section } from '../NavBar/NavContext';
 
 interface HeartConfig {
   id: number;
@@ -25,7 +26,6 @@ const HEARTS: HeartConfig[] = [
   { id: 7, styleClass: styles.h7, width: 130,  height: 55  },
 ];
 
-export type Section = 'hero' | 'intro' | 'info' | 'form';
 const SECTIONS: Section[] = ['hero', 'intro', 'info', 'form'];
 
 function getLayerClass(layer: Section, current: Section, s: Record<string, string>) {
@@ -37,7 +37,7 @@ function getLayerClass(layer: Section, current: Section, s: Record<string, strin
 }
 
 export default function HeroSection() {
-  const [currentSection, setCurrentSection] = useState<Section>('hero');
+  const { currentSection, setCurrentSection } = useNavContext();
   const currentSectionRef = useRef<Section>(currentSection);
   const infoLayerRef = useRef<HTMLDivElement>(null);
   const formLayerRef = useRef<HTMLDivElement>(null);
@@ -104,29 +104,11 @@ export default function HeroSection() {
     };
   }, []);
 
-  const handleNavClick = (item: string) => {
-    if (item === '공연소개') setCurrentSection('hero');
-    if (item === '참가신청') setCurrentSection('form');
-  };
-
   const layerClass = (layer: Section) =>
     `${styles.layer} ${getLayerClass(layer, currentSection, styles)}`;
 
   return (
     <main className={styles.scene}>
-      {/* 배경 orbit */}
-      {/* <Image
-        className={styles.orbitImg}
-        src="/orbit.png"
-        alt="orbit"
-        width={1200}
-        height={800}
-        priority
-      />
-       */}
-      {/* Navigation */}
-      <NavBar currentSection={currentSection} onNavClick={handleNavClick} />
-
       {/* Hero Layer */}
       <div className={layerClass('hero')}>
         <section className={styles.titleWrap}>
