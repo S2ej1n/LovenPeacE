@@ -13,16 +13,16 @@ export const MEMBERS: MemberCardProps[] = [
   {
     name: '고보민',
     position: 'Planning Team Member',
-    quote: '한마디를 입력해주세요.',
+    quote: '\" 평화가 당연해지는 날까지 \"',
     photo: '',
     sns: [
-      { label: 'Instagram', url: '#' },
+      { label: 'Instagram', url: 'https://www.instagram.com/min.3.03/' },
     ],
   },
   {
     name: '강세진',
     position: 'Design, Web Development',
-    quote: '\" 외주 받습니다. 문의는 아래의 연락처로... \"',
+    quote: '\" 외주 받습니다. 문의는 아래로.. \"',
     photo: '',
     sns: [
       { label: 'Instagram', url: 'https://www.instagram.com/sayyywls/' },
@@ -31,10 +31,10 @@ export const MEMBERS: MemberCardProps[] = [
   {
     name: '명수진',
     position: 'Finance',
-    quote: '한마디를 입력해주세요.',
+    quote: '\" 사랑은 레드, 사랑합니다 \"',
     photo: '',
     sns: [
-      { label: 'Instagram', url: '#' },
+      { label: 'Instagram', url: 'https://www.instagram.com/00_msg_00/' },
     ],
   },
   {
