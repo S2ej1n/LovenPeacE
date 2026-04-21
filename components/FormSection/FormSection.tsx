@@ -26,6 +26,7 @@ type FormValues = z.infer<typeof schema>;
 
 export default function FormSection() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [showPrivacy, setShowPrivacy] = useState(false);
 
   const {
@@ -38,16 +39,18 @@ export default function FormSection() {
   });
 
   const onSubmit = async (data: FormValues) => {
-    // TODO: 실제 제출 처리
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    console.log(data);
-    setSubmitted(true);
+    setSubmitError(null);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error();
+      setSubmitted(true);
+    } catch {
+      setSubmitError('서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }
   };
 
   if (submitted) {
@@ -139,12 +142,14 @@ export default function FormSection() {
               {errors.privacy && <span className={styles.error}>{errors.privacy.message}</span>}
             </div>
 
+            {submitError && <span className={styles.error}>{submitError}</span>}
+
             <button
               className={styles.submitBtn}
               type="submit"
               disabled={isSubmitting}
             >
-              {isSubmitting ? '신청 중...' : '아직 신청기간이 아닙니다.'}
+              {isSubmitting ? '신청 중...' : '신청하기'}
             </button>
           </form>
         </div>
