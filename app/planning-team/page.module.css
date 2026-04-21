@@ -3,6 +3,8 @@
   z-index: 10;
   height: 100vh;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .scrollArea {
