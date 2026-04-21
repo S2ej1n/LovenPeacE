@@ -10,7 +10,7 @@ import PrivacyModal from './PrivacyModal';
 const schema = z.object({
   teamName: z.string().min(1, '팀명을 입력해주세요'),
   leader: z.string().min(1, '팀 대표자 이름을 입력해주세요'),
-  contact: z
+  phone: z
     .string()
     .min(1, '연락처를 입력해주세요')
     .regex(/^010-?\d{4}-?\d{4}$/, '올바른 연락처를 입력해주세요'),
@@ -38,6 +38,13 @@ export default function FormSection() {
 
   const onSubmit = async (data: FormValues) => {
     // TODO: 실제 제출 처리
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     console.log(data);
     setSubmitted(true);
   };
@@ -90,12 +97,12 @@ export default function FormSection() {
               <div className={styles.field}>
                 <label className={styles.label}>대표자 연락처</label>
                 <input
-                  className={`${styles.input} ${errors.contact ? styles.inputError : ''}`}
+                  className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
                   type="tel"
                   placeholder="010-0000-0000"
-                  {...register('contact')}
+                  {...register('phone')}
                 />
-                {errors.contact && <span className={styles.error}>{errors.contact.message}</span>}
+                {errors.phone && <span className={styles.error}>{errors.phone.message}</span>}
               </div>
             </div>
 
