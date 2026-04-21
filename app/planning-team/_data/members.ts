@@ -41,7 +41,7 @@ export const MEMBERS: MemberCardProps[] = [
     name: '최지훈',
     position: 'Photography',
     quote: '\" 군대에서도 사진 찍는 놈 \"',
-    photo: '/planning/ahlo.png',
+    photo: '/planning/ahl.png',
     sns: [
       { label: 'Instagram', url: 'https://www.instagram.com/ahlo_ha_oh_yeah/' },
     ],
