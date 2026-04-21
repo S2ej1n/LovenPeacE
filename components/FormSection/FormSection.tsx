@@ -7,6 +7,7 @@ import { z } from 'zod';
 import styles from './FormSection.module.css';
 import PrivacyModal from './PrivacyModal';
 import FormField from './FormField';
+import { submitApplication } from '@/lib/api/applications';
 
 const schema = z.object({
   teamName: z.string().min(1, '팀명을 입력해주세요'),
@@ -41,12 +42,7 @@ export default function FormSection() {
   const onSubmit = async (data: FormValues) => {
     setSubmitError(null);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error();
+      await submitApplication(data);
       setSubmitted(true);
     } catch {
       setSubmitError('서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.');
