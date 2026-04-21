@@ -15,7 +15,7 @@ const schema = z.object({
   phone: z
     .string()
     .min(1, '연락처를 입력해주세요')
-    .regex(/^010-?\d{4}-?\d{4}$/, '올바른 연락처를 입력해주세요'),
+    .regex(/^010\d{8}$/, '010으로 시작하는 11자리 숫자를 입력해주세요'),
   members: z.string().min(1, '팀원을 입력해주세요'),
   genre: z.string().min(1, '예상 곡 장르 또는 가수를 입력해주세요. 팀원들의 선호 장르를 입력해도 괜찮습니다.'),
   privacy: z.literal(true, {
@@ -134,16 +134,16 @@ export default function FormSection() {
                 registration={register('leader')}
               />
               <FormField
-                label="대표자 연락처"
+                label="대표자 연락처 (-제외, 숫자만)"
                 type="tel"
-                placeholder="010-0000-0000"
+                placeholder="01012345678"
                 error={errors.phone}
                 registration={register('phone')}
               />
             </div>
 
             <FormField
-              label="팀원"
+              label="팀원 (대표까지 입력 바랍니다)"
               placeholder="예: 명수진(V) 강세진(B) 김이레(G) 고보민(G) 최지훈(D)"
               error={errors.members}
               registration={register('members')}
