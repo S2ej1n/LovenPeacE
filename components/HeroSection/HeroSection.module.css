@@ -4,6 +4,8 @@
   height: 100vh;
   overflow: hidden;
   font-family: 'Noto Sans KR', sans-serif;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 /* ── Layers ── */
