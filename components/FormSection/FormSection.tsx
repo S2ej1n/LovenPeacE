@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import styles from './FormSection.module.css';
 import PrivacyModal from './PrivacyModal';
+import FormField from './FormField';
+import { submitApplication, getFormStatus } from '@/lib/api/applications';
 
 const schema = z.object({
   teamName: z.string().min(1, '팀명을 입력해주세요'),
@@ -25,7 +27,50 @@ type FormValues = z.infer<typeof schema>;
 
 export default function FormSection() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean | null>(null);
+  const [remainMs, setRemainMs] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  const fetchStatus = () =>
+    getFormStatus()
+      .then(({ isOpen, serverTime, openTime }) => {
+        setIsOpen(isOpen);
+        if (!isOpen) {
+          setRemainMs(new Date(openTime).getTime() - new Date(serverTime).getTime());
+        }
+      })
+      .catch(() => setIsOpen(false));
+
+  useEffect(() => {
+    fetchStatus();
+  }, []);
+
+  useEffect(() => {
+    if (remainMs === null || remainMs <= 0) return;
+
+    setCountdown({
+      days:    Math.floor(remainMs / 86400000),
+      hours:   Math.floor((remainMs % 86400000) / 3600000),
+      minutes: Math.floor((remainMs % 3600000)  / 60000),
+      seconds: Math.floor((remainMs % 60000)    / 1000),
+    });
+
+    const id = setInterval(() => {
+      setRemainMs(prev => {
+        const next = (prev ?? 0) - 1000;
+        if (next <= 0) {
+          clearInterval(id);
+          fetchStatus();
+          return 0;
+        }
+        return next;
+      });
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, [remainMs]);
 
   const {
     register,
@@ -37,16 +82,13 @@ export default function FormSection() {
   });
 
   const onSubmit = async (data: FormValues) => {
-    // TODO: 실제 제출 처리
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    console.log(data);
-    setSubmitted(true);
+    setSubmitError(null);
+    try {
+      await submitApplication(data);
+      setSubmitted(true);
+    } catch {
+      setSubmitError('서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }
   };
 
   if (submitted) {
@@ -55,7 +97,14 @@ export default function FormSection() {
         <div className={styles.card}>
           <div className={styles.successWrap}>
             <h2 className={styles.title}>신청이 완료되었습니다</h2>
-            <p className={styles.subtitle}>선정 공연팀에게는 추후 개별 안내가 갈 예정입니다.</p>
+            <p className={styles.subtitle}>
+              L♡vE and PeacE에 관심을 가지고 참여해주셔서 감사합니다.
+              <br />
+              <br />
+              선정 공연팀에게는 추후 개별 안내가 갈 예정입니다.
+              <br />
+              문의사항은 Instagram @project_lovenpeace로 연락 바랍니다.
+            </p>
           </div>
         </div>
       </div>
@@ -70,65 +119,42 @@ export default function FormSection() {
           <p className={styles.subtitle}>L♡vE and PeacE 공연팀은 선착순으로 모집됩니다.</p>
 
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
-            {/* 팀명 */}
-            <div className={styles.field}>
-              <label className={styles.label}>팀명</label>
-              <input
-                className={`${styles.input} ${errors.teamName ? styles.inputError : ''}`}
-                type="text"
-                placeholder="팀명은 추후 변경 가능합니다."
-                {...register('teamName')}
-              />
-              {errors.teamName && <span className={styles.error}>{errors.teamName.message}</span>}
-            </div>
+            <FormField
+              label="팀명"
+              placeholder="팀명은 추후 변경 가능합니다."
+              error={errors.teamName}
+              registration={register('teamName')}
+            />
 
-            {/* 팀 대표 / 연락처 */}
             <div className={styles.row}>
-              <div className={styles.field}>
-                <label className={styles.label}>팀 대표</label>
-                <input
-                  className={`${styles.input} ${errors.leader ? styles.inputError : ''}`}
-                  type="text"
-                  placeholder="대표자 이름"
-                  {...register('leader')}
-                />
-                {errors.leader && <span className={styles.error}>{errors.leader.message}</span>}
-              </div>
-              <div className={styles.field}>
-                <label className={styles.label}>대표자 연락처</label>
-                <input
-                  className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
-                  type="tel"
-                  placeholder="010-0000-0000"
-                  {...register('phone')}
-                />
-                {errors.phone && <span className={styles.error}>{errors.phone.message}</span>}
-              </div>
+              <FormField
+                label="팀 대표"
+                placeholder="대표자 이름"
+                error={errors.leader}
+                registration={register('leader')}
+              />
+              <FormField
+                label="대표자 연락처"
+                type="tel"
+                placeholder="010-0000-0000"
+                error={errors.phone}
+                registration={register('phone')}
+              />
             </div>
 
-            {/* 팀원 */}
-            <div className={styles.field}>
-              <label className={styles.label}>팀원</label>
-              <input
-                className={`${styles.input} ${errors.members ? styles.inputError : ''}`}
-                type="text"
-                placeholder="예: 명수진(V) 강세진(B) 김이레(G) 고보민(G) 최지훈(D)"
-                {...register('members')}
-              />
-              {errors.members && <span className={styles.error}>{errors.members.message}</span>}
-            </div>
+            <FormField
+              label="팀원"
+              placeholder="예: 명수진(V) 강세진(B) 김이레(G) 고보민(G) 최지훈(D)"
+              error={errors.members}
+              registration={register('members')}
+            />
 
-            {/* 예상 곡 장르 or 가수 */}
-            <div className={styles.field}>
-              <label className={styles.label}>예상 곡 장르 / 가수</label>
-              <input
-                className={`${styles.input} ${errors.genre ? styles.inputError : ''}`}
-                type="text"
-                placeholder="예: 인디, 메탈, JPOP 등"
-                {...register('genre')}
-              />
-              {errors.genre && <span className={styles.error}>{errors.genre.message}</span>}
-            </div>
+            <FormField
+              label="예상 곡 장르 / 가수"
+              placeholder="예: 인디, 메탈, JPOP 등"
+              error={errors.genre}
+              registration={register('genre')}
+            />
 
             {/* 개인정보 동의 */}
             <div className={styles.privacyWrap}>
@@ -154,13 +180,27 @@ export default function FormSection() {
               {errors.privacy && <span className={styles.error}>{errors.privacy.message}</span>}
             </div>
 
+            {submitError && <span className={styles.error}>{submitError}</span>}
+
             <button
               className={styles.submitBtn}
               type="submit"
-              disabled={isSubmitting}
+              disabled={!isOpen || isSubmitting}
             >
-              {isSubmitting ? '신청 중...' : '아직 신청기간이 아닙니다.'}
+              {isSubmitting ? '신청 중...' : isOpen === null ? '확인 중...' : isOpen ? '신청하기' : '아직 신청기간이 아닙니다.'}
             </button>
+
+            {isOpen === false && (
+              <div className={styles.countdown}>
+                <span className={styles.countdownLabel}>신청 오픈까지</span>
+                <div className={styles.countdownTimer}>
+                  <span>{String(countdown.days).padStart(2, '0')}<em>일</em></span>
+                  <span>{String(countdown.hours).padStart(2, '0')}<em>시간</em></span>
+                  <span>{String(countdown.minutes).padStart(2, '0')}<em>분</em></span>
+                  <span>{String(countdown.seconds).padStart(2, '0')}<em>초</em></span>
+                </div>
+              </div>
+            )}
           </form>
         </div>
       </div>
