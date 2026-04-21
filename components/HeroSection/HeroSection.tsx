@@ -132,6 +132,10 @@ export default function HeroSection() {
             ))}
           </div>
         </section>
+        <div className={styles.scrollHint}>
+          Scroll
+          <span className={styles.scrollArrow} />
+        </div>
       </div>
 
       {/* Intro Layer */}
