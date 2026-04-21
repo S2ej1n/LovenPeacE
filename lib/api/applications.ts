@@ -1,3 +1,15 @@
+export interface FormStatus {
+  isOpen: boolean;
+  serverTime: string;
+  openTime: string;
+}
+
+export async function getFormStatus(): Promise<FormStatus> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/status`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
 export interface ApplicationPayload {
   teamName: string;
   leader: string;

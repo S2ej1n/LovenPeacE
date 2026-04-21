@@ -183,6 +183,45 @@
   cursor: not-allowed;
 }
 
+/* ── 카운트다운 ── */
+.countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.countdownLabel {
+  font-size: 11px;
+  color: rgba(193, 200, 223, 0.4);
+  letter-spacing: 0.08em;
+}
+
+.countdownTimer {
+  display: flex;
+  gap: 12px;
+}
+
+.countdownTimer span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 20px;
+  font-weight: 300;
+  color: rgba(193, 200, 223, 0.75);
+  letter-spacing: 0.04em;
+  min-width: 36px;
+  text-align: center;
+}
+
+.countdownTimer em {
+  font-style: normal;
+  font-size: 9px;
+  color: rgba(193, 200, 223, 0.35);
+  letter-spacing: 0.06em;
+}
+
 /* ── 제출 완료 ── */
 .successWrap {
   display: flex;

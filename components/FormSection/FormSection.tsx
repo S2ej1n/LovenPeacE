@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import styles from './FormSection.module.css';
 import PrivacyModal from './PrivacyModal';
 import FormField from './FormField';
-import { submitApplication } from '@/lib/api/applications';
+import { submitApplication, getFormStatus } from '@/lib/api/applications';
 
 const schema = z.object({
   teamName: z.string().min(1, '팀명을 입력해주세요'),
@@ -29,6 +29,48 @@ export default function FormSection() {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean | null>(null);
+  const [remainMs, setRemainMs] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  const fetchStatus = () =>
+    getFormStatus()
+      .then(({ isOpen, serverTime, openTime }) => {
+        setIsOpen(isOpen);
+        if (!isOpen) {
+          setRemainMs(new Date(openTime).getTime() - new Date(serverTime).getTime());
+        }
+      })
+      .catch(() => setIsOpen(false));
+
+  useEffect(() => {
+    fetchStatus();
+  }, []);
+
+  useEffect(() => {
+    if (remainMs === null || remainMs <= 0) return;
+
+    setCountdown({
+      days:    Math.floor(remainMs / 86400000),
+      hours:   Math.floor((remainMs % 86400000) / 3600000),
+      minutes: Math.floor((remainMs % 3600000)  / 60000),
+      seconds: Math.floor((remainMs % 60000)    / 1000),
+    });
+
+    const id = setInterval(() => {
+      setRemainMs(prev => {
+        const next = (prev ?? 0) - 1000;
+        if (next <= 0) {
+          clearInterval(id);
+          fetchStatus();
+          return 0;
+        }
+        return next;
+      });
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, [remainMs]);
 
   const {
     register,
@@ -143,10 +185,22 @@ export default function FormSection() {
             <button
               className={styles.submitBtn}
               type="submit"
-              disabled={isSubmitting}
+              disabled={!isOpen || isSubmitting}
             >
-              {isSubmitting ? '신청 중...' : '신청하기'}
+              {isSubmitting ? '신청 중...' : isOpen === null ? '확인 중...' : isOpen ? '신청하기' : '아직 신청기간이 아닙니다.'}
             </button>
+
+            {isOpen === false && (
+              <div className={styles.countdown}>
+                <span className={styles.countdownLabel}>신청 오픈까지</span>
+                <div className={styles.countdownTimer}>
+                  <span>{String(countdown.days).padStart(2, '0')}<em>일</em></span>
+                  <span>{String(countdown.hours).padStart(2, '0')}<em>시간</em></span>
+                  <span>{String(countdown.minutes).padStart(2, '0')}<em>분</em></span>
+                  <span>{String(countdown.seconds).padStart(2, '0')}<em>초</em></span>
+                </div>
+              </div>
+            )}
           </form>
         </div>
       </div>
