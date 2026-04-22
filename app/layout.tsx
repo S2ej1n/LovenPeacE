@@ -6,6 +6,7 @@ import styles from './layout.module.css';
 import Image from 'next/image';
 import { NavProvider } from '@/components/NavBar/NavContext';
 import NavBar from '@/components/NavBar/NavBar';
+import { Analytics } from '@vercel/analytics/next';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['latin'],
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <NavProvider>
           <NavBar />
           {children}
+          <Analytics />
           {/* 배경 orbit */}
           <Image
             className={styles.orbitImg}
